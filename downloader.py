@@ -14,12 +14,19 @@ def downloader(link_path: str, output_path: str):
             line = f.readline()
             try:
                 while line:
-                    datetime_name, x = line.strip().split('___')
+                    try:
+                        datetime_name, x = line.strip().split('[SEP]')
+                    except ValueError:
+                        print(line.strip())
                     line = f.readline()
-                    r = requests.get(x, stream=True)
-                    with open(f'{output_path}/{dialogue_folder}/{datetime_name}.jpg', 'wb') as fd:
-                        for chunk in r.iter_content():
-                            fd.write(chunk)
+                    target_path = f'{output_path}/{dialogue_folder}/{datetime_name}.jpg'
+                    if not os.path.exists(target_path):
+                        r = requests.get(x, stream=True)
+                        with open(target_path, 'wb') as fd:
+                            for chunk in r.iter_content():
+                                fd.write(chunk)
+                    else:
+                        continue
             except TimeoutError:
                 print('Задержка ответа от сервера, ожидайте')
                 time.sleep(5)

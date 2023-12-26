@@ -47,7 +47,7 @@ def grabber(input_path: str, links_path: str):
                             duplicate_num = 0
                         prev_datetime = curr_datetime
                         x = link.get('href')
-                        y.write(f'{curr_datetime}___{x}\n')
+                        y.write(f'{curr_datetime}[SEP]{x}\n')
         if total_links == 0:
             os.remove(os.path.join(links_path, f'{dialogue_name}_links.txt'))
         else:
