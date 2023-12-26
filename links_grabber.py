@@ -13,6 +13,7 @@ def grabber(input_path: str, links_path: str):
     dialogue_folder_list = [d_dir for d_dir in os.listdir(input_path) if os.path.isdir(os.path.join(input_path, d_dir))]
     print(f'Диалогов найдено: {len(dialogue_folder_list)}')
     for folder in tqdm(dialogue_folder_list):
+        total_links = 0
         deleted_count = 0
         dialogue_path = os.path.join(input_path, folder)
         with open(f'{dialogue_path}/1.html', 'r', encoding='windows-1251') as x:
@@ -31,9 +32,9 @@ def grabber(input_path: str, links_path: str):
                 with open(os.path.join(dialogue_path, msg_page), 'r', encoding='windows-1251') as x:
                     soup = BeautifulSoup(x, 'html.parser')
                     links = soup.select('a[href^="https://sun"]')
+                    total_links += len(links)
                     prev_datetime = ''
                     duplicate_num = 0
-                    total_links = 0
                     for link in links:
                         format_str = "%d %b %Y в %H:%M:%S"
                         raw_date = link.find_parents()[2].find_previous_sibling().text.split(', ')[-1]
@@ -47,7 +48,6 @@ def grabber(input_path: str, links_path: str):
                         prev_datetime = curr_datetime
                         x = link.get('href')
                         y.write(f'{curr_datetime}___{x}\n')
-                        total_links += len(links)
         if total_links == 0:
             os.remove(os.path.join(links_path, f'{dialogue_name}_links.txt'))
         else:

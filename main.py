@@ -1,6 +1,6 @@
 import os
 
-from dowloader import downloader
+from downloader import downloader
 from links_grabber import grabber
 from renamer import rename
 
